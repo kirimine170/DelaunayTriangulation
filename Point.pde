@@ -67,5 +67,31 @@ class Point extends PVector
     return this;
   }
   
+  public void moveRandomly(float maxDistance)
+  {
+    float angle = random(TWO_PI); // 全方向にランダムに動かす
+    float distance = random(maxDistance); // 最大距離内でランダムな距離
+    this.x += cos(angle) * distance;
+    this.y += sin(angle) * distance;
+  }
+  
+  public void moveRandomly(float maxDistance, PVector centre, float biasStrength)
+  {
+    float angle = random(TWO_PI);
+    float distance = random(maxDistance);
+    
+    PVector bias = new PVector(x - centre.x, y - centre.y);
+    bias.normalize();
+    bias.mult(-1);
+    float edgeDistance = min(min(x, width-x), min(y, height-y));
+    float biasFactor = map(edgeDistance, 0, width/4, biasStrength, 0);
+    bias.mult(biasFactor);
+    
+    PVector move = new PVector(cos(angle) * distance, sin(angle) * distance);
+    move.add(bias);
+    
+    this.x += move.x;
+    this.y += move.y;
+  }
 
 }
